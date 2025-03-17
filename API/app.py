@@ -39,7 +39,7 @@ def update():
     time_pressed = datetime.now()
 
     # Insert into MongoDB
-    collection.insert_one({"option": option,"participant":participant_id, "time_pressed": time_pressed})
+    collection.insert_one({"option": option.split("/")[-1],"participant":participant_id, "time_pressed": time_pressed})
 
     return jsonify({"message": "Option added successfully"}), 200
 
