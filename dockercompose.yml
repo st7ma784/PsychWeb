@@ -1,21 +1,31 @@
-version: '3.8'
 
 services:
   api:
     build: ./API
     container_name: python_api
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./API
+          target: /app
     depends_on:
       - mongo
     environment:
       - MONGO_URI=mongodb://mongo:27017/mydatabase
-
+    networks:
+      - PsychNet
   vis:
     build: ./VIS
     container_name: react_vis
     depends_on:
-      - api
-    environment:
-      - REACT_APP_API_URL=http://api:5000
+      - mongo
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./VIS
+          target: /app
+    networks:
+      - PsychNet
   mongo:
     image: mongo:latest
     container_name: mongo_db
@@ -25,14 +35,20 @@ services:
       - mongo_data:/data/db
 
   nginx:
-    build: ./nginx
+    image: nginx:latest
     container_name: nginx_server
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "8080:8080"
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./nginx.conf
+          target: /etc/nginx/nginx.conf
     depends_on:
       - api
+      - vis
     networks:
       - PsychNet
 volumes:
