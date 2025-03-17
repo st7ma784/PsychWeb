@@ -11,7 +11,16 @@ def home():
 
 @app.route('/data', methods=['GET'])
 def get_data():
-    data = mongo.db.collection.find({}, {'_id': 0, 'options': 1})
+    #creates a dictionary of {class: count} from the database "options" column.
+    data = mongo.db.options.aggregate([
+        {
+            "$group": {
+                "_id": "$option",
+                "count": {"$sum": 1}
+            }
+        }
+    ])
+    
     return dumps(data)
 
 if __name__ == '__main__':
