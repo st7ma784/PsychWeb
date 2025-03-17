@@ -1,11 +1,11 @@
 from flask import Flask, jsonify, render_template
-app = Flask(__name__)
+app = Flask(__name__,template_folder="./")
 from pymongo import MongoClient
 from datetime import datetime
 import os
 
 # MongoDB setup
-client = MongoClient('mongodb://mongo_db:27017/')
+client = MongoClient('mongodb://mongo:27017/')
 db = client['mydatabase']
 collection = db['options']
 
@@ -23,7 +23,7 @@ def get_data():
             data[option['option']] = 1
         else:
             data[option['option']] += 1
-    
+    print(data)
     return jsonify(data)
 
 if __name__ == '__main__':

@@ -1,29 +1,32 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from pymongo import MongoClient
 from datetime import datetime
-from flask import render_template
 
 import os
-app = Flask(__name__)
-
 # MongoDB setup
-client = MongoClient('mongodb://mongo_db:27017/')
+client = MongoClient('mongodb://mongo:27017/')
 db = client['mydatabase']
 collection = db['options']
+# Flask setup
+app = Flask(__name__, static_folder='./buttons/',template_folder="./")
+buttons = []
+
 
 @app.route('/')
 def home():
-    return render_template('index.html',title='Home')
+    # print(os.system('ls'))
+    
+    return render_template('index.html')
 
 @app.route('/buttons', methods=['GET'])
 def buttons():
-   
+    files=[]
     # Get all the options from the folder buttons and return them in a list
     for file in os.listdir('buttons'):
         if file.endswith('.png'):
-            buttons.append(file)
+            files.append(file)
 
-    return jsonify({"icons": buttons})
+    return jsonify({"icons": files})
 
 @app.route('/update', methods=['POST'])
 def update():

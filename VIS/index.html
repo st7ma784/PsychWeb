@@ -5,11 +5,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>Bar Chart</h1>
     <canvas id="myChart" width="400" height="200"></canvas>
     <script>
         async function fetchData() {
-            const response = await fetch('/data');
+            const response = await fetch('/vis/data');
             const data = await response.json();
             return data;
         }
@@ -48,7 +47,7 @@
             setInterval(async () => {
                 const data = await fetchData();
                 updateChart(chart, data);
-            }, 5000); // Update every 5 seconds
+            }, 1000); // Update every 1 seconds
         }
 
         initChart();
