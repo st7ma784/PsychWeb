@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icons Display</title>
+    <style>
+        .icon {
+            width: 50px;
+            height: 50px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="icons-container"></div>
+    <label for="participant-id">Participant ID:</label>
+    <input type="text" id="participant-id" name="participant-id">
+
+    <script>
+        fetch('/buttons')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('icons-container');
+                data.icons.forEach(icon => {
+                    const img = document.createElement('img');
+                    img.src = `/buttons/${icon}`;
+                    img.alt = icon;
+                    img.className = 'icon';
+                    img.addEventListener('click', update);
+                    container.appendChild(img);
+                });
+            })
+            .catch(error => console.error('Error fetching icons:', error));
+        function update(event) {
+            // this will be triggered when an icon is clicked.
+            // You can use the event object to get the target element and its attributes.
+            // For example, event.target.src will give you the URL of the clicked icon.
+            // You can then send this URL to the server as "option" in a fetch request.
+            const participantId = document.getElementById('participant-id').value;
+            const option = event.target.src;
+            data={"participantId":participantId,"option":option}
+            fetch('/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log('Vote submitted:', data))
+                .catch(error => console.error('Error submitting vote:', error));
+        }
+    </script>
+</body>
+</html>

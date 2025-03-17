@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./API
+    container_name: python_api
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/mydatabase
+
+  vis:
+    build: ./VIS
+    container_name: react_vis
+    depends_on:
+      - api
+    environment:
+      - REACT_APP_API_URL=http://api:5000
+  mongo:
+    image: mongo:latest
+    container_name: mongo_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  nginx:
+    build: ./nginx
+    container_name: nginx_server
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "8080:8080"
+    depends_on:
+      - api
+    networks:
+      - PsychNet
+volumes:
+  mongo_data:
+networks:
+  PsychNet:
+    driver: bridge
