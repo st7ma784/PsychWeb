@@ -18,6 +18,11 @@
             const values = Object.values(data);
 
             chart.data.labels = labels;
+            // color the first bar green and the second bar red
+            chart.data.datasets[0].backgroundColor = values.map((value, index) => index === 0 ? 'green' : 'red');
+            chart.data.datasets[0].borderColor = values.map((value, index) => index === 0 ? 'darkgreen' : 'darkred');
+            chart.data.datasets[0].borderWidth = 1;
+            // set the data for the chart
             chart.data.datasets[0].data = values;
             chart.update();
         }
@@ -27,7 +32,7 @@
             const chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: [],
+                    labels: ["correct", "incorrect"],
                     datasets: [{
                         label: 'Class Count',
                         data: [],

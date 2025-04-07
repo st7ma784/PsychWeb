@@ -26,13 +26,13 @@ def get_data():
     data = {"correct":0,"incorrect":0}
     for option in collection.find():
         #the logic is that option has a column for folder and a option for the file name clicked. 
-        print(option)
+        # print(option)
         folder= option.get('folder',"")
         option= option['option']
         #check the correct answer in the database by finding the row with the folder name in the test_name column
         row_dict= data_table[data_table['test_name'] == folder].to_dict(orient='records')
         if len(row_dict)==0:
-            print("No row found for folder: ",folder)
+            # print("No row found for folder: ",folder)
             continue
         row=row_dict[0]
         #check if the option is in the row
@@ -43,7 +43,7 @@ def get_data():
         elif correct_answer == "imageB":
             answer= row["rightImage"]
         else: 
-            answer="Shrug-Kaomoji"
+            answer="Shrugging_Kaomoji"
         answer=answer.split("/")[-1].split(".")[0]
         if answer==option:
             data['correct']+=1

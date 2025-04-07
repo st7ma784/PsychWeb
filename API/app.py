@@ -34,7 +34,8 @@ for test_name in data_table['test_name'].unique():
                     # Copy the image to the destination path
                     if not os.path.exists(dest_path):
                         os.system(f'cp {image_path} {dest_path}')
-
+os.makedirs('buttons/tmp', exist_ok=True)
+os.system('cp pictures/Shrugging_kaomoji.jpg buttons/tmp/Shrugging_kaomoji.jpg')
 
 
 @app.route('/')
@@ -73,7 +74,7 @@ def get_options(subpath):
     # Get all the options from the folder buttons and return them in a list
     folder_path = os.path.join('buttons', subpath)
     print(f"Looking for files in: {folder_path}")
-    files=["Shrug-Kaomoji.png"]
+    files=["tmp/Shrugging_kaomoji.jpg"]
     assert os.path.exists(folder_path), "Folder does not exist"
     for file in os.listdir(os.path.join('buttons', subpath)):
         if file.endswith('.png') or file.endswith('.jpg') or file.endswith('.jpeg'):
