@@ -4,33 +4,117 @@
     <title>Icons Display</title>
     <style>
         .icon {
-            width: 50px;
-            height: 50px;
+            width: 20%;
+            height: 40%;
             margin: 10px;
         }
+        #sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 100%;
+            background-color: #f4f4f4;
+            border-left: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        #sidebar h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        #sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #sidebar ul li {
+            margin: 5px 0;
+        }
+        #sidebar ul li a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        #sidebar ul li a:hover {
+            text-decoration: underline;
+        }
+       
+        #participant-id-label {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-size: 16px;
+        }
+        #participant-id {
+            /* align to bottom of screen next to label */
+            position: fixed;
+            bottom: 10px;
+            left: 150px;
+            font-size: 16px;
+            width: 200px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #icons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+
     </style>
 </head>
-<body>
-    <h1>Vote for your favorite icon</h1>
-    <div id="icons-container"></div>
-    <label for="participant-id">Participant ID:</label>
-    <input type="text" id="participant-id" name="participant-id" value="1">
-
-    <script>
-        fetch('/buttons')
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.createElement('div');
+        sidebar.id = 'sidebar';
+        sidebar.innerHTML = '<h2>Folders</h2><ul id="folders-list"></ul>';
+        document.body.appendChild(sidebar);
+        fetchAddress = '/buttons';
+        fetch('/listfolders')
             .then(response => response.json())
             .then(data => {
-                const container = document.getElementById('icons-container');
-                data.icons.forEach(icon => {
-                    const img = document.createElement('img');
-                    img.src = `/buttons/${icon}`;
-                    img.alt = icon;
-                    img.className = 'icon';
-                    img.addEventListener('click', update);
-                    container.appendChild(img);
+                const foldersList = document.getElementById('folders-list');
+                data.folders.forEach(folder => {
+                    const li = document.createElement('li');
+                    const link = document.createElement('a');
+                    //when link is clicked, it will call retrieve_buttons function with the folder name
+                    link.onclick = function() {
+                        retrieve_buttons(`/buttons/${folder}/`);
+                    };
+                    link.textContent = folder;
+                    li.appendChild(link);
+                    foldersList.appendChild(li);
                 });
             })
-            .catch(error => console.error('Error fetching icons:', error));
+            .catch(error => console.error('Error fetching folders:', error));
+    });
+</script>
+<body>
+    <h2>Vote for your favorite icon</h2>
+    <div id="icons-container"></div>
+    <label id="participant-id-label" for="participant-id">Participant ID:</label>
+    <input type="text" id="participant-id" name="participant-id" value="">
+    <script>
+        function retrieve_buttons(link){
+
+            fetch(link)
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('icons-container');
+                    container.innerHTML = ''; // Clear previous icons
+                    data.icons.forEach(icon => {
+                        const img = document.createElement('img');
+                        img.src = `/buttons/${icon}`;
+                        img.alt = icon;
+                        img.className = 'icon';
+                        img.addEventListener('click', update);
+                        container.appendChild(img);
+                    });
+                })
+                .catch(error => console.error('Error fetching icons:', error));
+        }
         function update(event) {
             // this will be triggered when an icon is clicked.
             // You can use the event object to get the target element and its attributes.

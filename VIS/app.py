@@ -8,6 +8,12 @@ import os
 client = MongoClient('mongodb://mongo:27017/')
 db = client['mydatabase']
 collection = db['options']
+#read spreadsheet from the xlsx file and create a list of folders
+import pandas as pd
+data_table= pd.read_excel('pictures.xlsx')
+#table will have image columns and a correct answer column
+
+
 
 
 @app.route('/')
@@ -17,13 +23,34 @@ def home():
 @app.route('/data', methods=['GET'])
 def get_data():
     #creates a dictionary of {class: count} from the database "options" column.
-    data = {}
+    data = {"correct":0,"incorrect":0}
     for option in collection.find():
-        if option['option'] not in data:
-            data[option['option']] = 1
+        #the logic is that option has a column for folder and a option for the file name clicked. 
+        print(option)
+        folder= option.get('folder',"")
+        option= option['option']
+        #check the correct answer in the database by finding the row with the folder name in the test_name column
+        row_dict= data_table[data_table['test_name'] == folder].to_dict(orient='records')
+        if len(row_dict)==0:
+            print("No row found for folder: ",folder)
+            continue
+        row=row_dict[0]
+        #check if the option is in the row
+        #find the CorrectAnswer column in the row
+        correct_answer= row['Correct']
+        if correct_answer == "imageA":
+            answer= row["leftImage"]
+        elif correct_answer == "imageB":
+            answer= row["rightImage"]
+        else: 
+            answer="Shrug-Kaomoji"
+        answer=answer.split("/")[-1].split(".")[0]
+        if answer==option:
+            data['correct']+=1
         else:
-            data[option['option']] += 1
-    print(data)
+            data['incorrect']+=1           
+
+    # print(data)
     return jsonify(data)
 
 if __name__ == '__main__':

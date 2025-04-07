@@ -8,6 +8,10 @@ services:
         - action: sync+restart
           path: ./API
           target: /app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./pictures.xlsx:/app/pictures.xlsx
     depends_on:
       - mongo
     environment:
@@ -19,6 +23,8 @@ services:
     container_name: react_vis
     depends_on:
       - mongo
+    volumes:
+      - ./pictures.xlsx:/app/pictures.xlsx
     develop:
       watch:
         - action: sync+restart
@@ -40,7 +46,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
-      - "8080:8080"
+      - "8083:8083"
     develop:
       watch:
         - action: sync+restart
