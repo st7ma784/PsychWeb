@@ -19,8 +19,22 @@
             padding: 10px;
             overflow-y: auto;
         }
+        /* background black */
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        #h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
         #sidebar h2 {
             font-size: 18px;
+            /* appear in center at the top of screen*/
+            text-align: center;
             margin-bottom: 10px;
         }
         #sidebar ul {
@@ -61,7 +75,12 @@
             justify-content: center;
             margin-top: 20px;
         }
-
+        #KAOMOJI {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
 
     </style>
 </head>
@@ -69,7 +88,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const sidebar = document.createElement('div');
         sidebar.id = 'sidebar';
-        sidebar.innerHTML = '<h2>Folders</h2><ul id="folders-list"></ul>';
+        sidebar.innerHTML = '<h2>Story stages</h2><ul id="folders-list"></ul>';
         document.body.appendChild(sidebar);
         fetchAddress = '/buttons';
         fetch('/listfolders')
@@ -92,10 +111,18 @@
     });
 </script>
 <body>
-    <h2>Vote for your favorite icon</h2>
     <div id="icons-container"></div>
+    <div id="KAOMOJI"></div>
     <label id="participant-id-label" for="participant-id">Participant ID:</label>
     <input type="text" id="participant-id" name="participant-id" value="">
+    <!-- add an info bobble that appears when the mouse is over it -->
+    
+    <div id="info-bubble" style="display:none; position:fixed; background-color:white; border:1px solid black; padding:5px;">
+        <p>
+        Based on the story you've heard, select which picture best represents the story.
+        </p>
+    </div>
+
     <script>
         function retrieve_buttons(link){
 
@@ -103,14 +130,29 @@
                 .then(response => response.json())
                 .then(data => {
                     const container = document.getElementById('icons-container');
+                    const container2 = document.getElementById('KAOMOJI');
                     container.innerHTML = ''; // Clear previous icons
+                    container2.innerHTML = ''; // Clear previous icons
                     data.icons.forEach(icon => {
                         const img = document.createElement('img');
                         img.src = `/buttons/${icon}`;
                         img.alt = icon;
                         img.className = 'icon';
                         img.addEventListener('click', update);
-                        container.appendChild(img);
+                        // if icon name ends with shrugging_kaomoji.jpg display it in the centre, below the other images.
+                        if (icon.endsWith('shrugging_kaomoji.jpg')) {
+                            img.style.margin = '0 auto';
+                            img.style.alignContent = 'center';
+                            img.style.display = 'block';
+                            img.style.width = '50%';
+                            img.style.height = '50%';
+                            img.style.marginTop = '20px'; 
+                            container2.appendChild(img);
+                        }
+                        else {
+                            container.appendChild(img);
+
+                        }
                     });
                 })
                 .catch(error => console.error('Error fetching icons:', error));
@@ -131,7 +173,17 @@
                 body: JSON.stringify(data)
             })
                 .then(response => response.json())
-                .then(data => console.log('Vote submitted:', data))
+                .then(data => {
+                    console.log('Vote submitted successfully:', data);
+                    // if code is not 400, 
+                    if (data.code != 400){
+                        const folder = data.folder;
+                        // call retrieve_buttons function with the folder name
+                        retrieve_buttons(`/buttons/${folder}/`);
+                    }
+                    
+                    // Optionally, you can update the UI or provide feedback to the user here.
+                })
                 .catch(error => console.error('Error submitting vote:', error));
         }
     </script>

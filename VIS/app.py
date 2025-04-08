@@ -43,11 +43,12 @@ def get_data():
         elif correct_answer == "imageB":
             answer= row["rightImage"]
         else: 
-            answer="Shrugging_Kaomoji"
+            answer="Shrugging_Kaomoji" ## this isn't working ? 
         answer=answer.split("/")[-1].split(".")[0]
         if answer==option:
             data['correct']+=1
         else:
+            answer=answer.split(".")[0]
             data['incorrect']+=1           
 
     # print(data)

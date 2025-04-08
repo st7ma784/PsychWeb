@@ -35,8 +35,8 @@ services:
   mongo:
     image: mongo:latest
     container_name: mongo_db
-    volumes:
-      - mongo_data:/data/db
+    # volumes:
+      # - mongo_data:/data/db
     networks:
       - PsychNet
 
