@@ -19,7 +19,10 @@ data_table= pd.read_excel('pictures.xlsx')
 #for each test name, create a folder with the test name and put the images in it and Shrugging_kaomoji.jpg
 
 data_table['test_name'] = data_table['test_name'].astype(str)
+#replace spaces with underscores
+data_table['test_name'] = data_table['test_name'].str.replace(" ", "_")
 for test_name in data_table['test_name'].unique():
+    test_name= test_name.replace(" ", "_")
     os.makedirs(os.path.join('buttons', test_name), exist_ok=True)
     #for each test name, create a folder with the test name and put the images in it and Shrugging_kaomoji.jpg
     for index, row in data_table[data_table['test_name'] == test_name].iterrows():
@@ -94,6 +97,8 @@ def get_options(subpath):
 def list_folders():
     # Get all the folders from test_names
     folders = data_table['test_name'].unique().tolist()
+    for i in range(len(folders)):
+        folders[i]= folders[i].replace(" ", "_")
     return jsonify({"folders": folders})
 
 

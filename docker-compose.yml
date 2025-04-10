@@ -8,6 +8,7 @@ services:
         - action: sync+restart
           path: ./API
           target: /app
+    restart: always 
     ports:
       - "5000:5000"
     volumes:
@@ -21,6 +22,7 @@ services:
   vis:
     build: ./VIS
     container_name: react_vis
+    restart: always
     depends_on:
       - mongo
     volumes:

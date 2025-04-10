@@ -23,7 +23,7 @@ def home():
 @app.route('/data', methods=['GET'])
 def get_data():
     #creates a dictionary of {class: count} from the database "options" column.
-    data = {"correct":0,"incorrect":0}
+    data = {"Researcher Agrees":0,"Researcher Disagrees":0}
     for option in collection.find():
         #the logic is that option has a column for folder and a option for the file name clicked. 
         # print(option)
@@ -46,10 +46,10 @@ def get_data():
             answer="Shrugging_Kaomoji" ## this isn't working ? 
         answer=answer.split("/")[-1].split(".")[0]
         if answer==option:
-            data['correct']+=1
+            data['Researcher Agrees']+=1
         else:
             answer=answer.split(".")[0]
-            data['incorrect']+=1           
+            data['Researcher Disagrees']+=1           
 
     # print(data)
     return jsonify(data)

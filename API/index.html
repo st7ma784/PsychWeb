@@ -74,12 +74,14 @@
             flex-wrap: wrap;
             justify-content: center;
             margin-top: 20px;
+            margin-bottom: 20px; /* to make space for the participant id input */
         }
         #KAOMOJI {
+            /* position beneath #icons-container */
+            position: relative;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            margin-top: 20px;
         }
 
     </style>
@@ -139,14 +141,15 @@
                         img.alt = icon;
                         img.className = 'icon';
                         img.addEventListener('click', update);
+                        console.log(icon);
                         // if icon name ends with shrugging_kaomoji.jpg display it in the centre, below the other images.
-                        if (icon.endsWith('shrugging_kaomoji.jpg')) {
+                        if (icon.endsWith('Shrugging_kaomoji.jpg')) {
+                            console.log("shrugging_kaomoji.jpg");
                             img.style.margin = '0 auto';
                             img.style.alignContent = 'center';
                             img.style.display = 'block';
-                            img.style.width = '50%';
-                            img.style.height = '50%';
-                            img.style.marginTop = '20px'; 
+                            img.style.width = '40%';
+                            img.style.height = '40%';
                             container2.appendChild(img);
                         }
                         else {
