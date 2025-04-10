@@ -38,7 +38,7 @@ services:
     image: mongo:latest
     container_name: mongo_db
     # volumes:
-      # - mongo_data:/data/db
+    #   - mongo_dataTest:/data/db
     networks:
       - PsychNet
 
@@ -60,7 +60,12 @@ services:
     networks:
       - PsychNet
 volumes:
-  mongo_data:
+  mongo_dataTest:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./database
+      o: bind
 networks:
   PsychNet:
     driver: bridge
