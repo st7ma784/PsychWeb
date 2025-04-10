@@ -3,11 +3,7 @@
 <head>
     <title>Icons Display</title>
     <style>
-        .icon {
-            width: 30%;
-            height: 30%;
-            margin: 10px;
-        }
+    
         #sidebar {
             position: fixed;
             top: 0;
@@ -62,10 +58,8 @@
             display: flex;
             flex-wrap: wrap;
             /* make height at most 50% of screen */
-            max-height: 50vh;
-            width: 100%;
-            /* scale contents to fit */
-            overflow: auto;
+            height: 50%;
+            width: 80%;
             /* center the icons */
             justify-content: center;
             margin-top: 20px;
@@ -73,7 +67,9 @@
         }
         #KAOMOJI {
             /* position beneath #icons-container */
-
+            width: 80%;
+            margin-top: 20px;
+            margin-bottom: 20px;
             position: relative;
             display: flex;
             flex-wrap: wrap;
@@ -146,16 +142,19 @@
                         img.className = 'icon';
                         img.addEventListener('click', update);
                         console.log(icon);
-                        img.style.margin = '0 auto';
-                        img.style.alignContent = 'center';
-                        img.style.display = 'block';
-                        //make the height and width 40% of the screen
-                        img.style.height = '40vh';
+                        // set size to be scaled to 40% of the screen height
+                        img.style.height = '60vh';
+                        img.style.width = 'auto';
+                        img.style.margin = '10px';
+                        img.style.cursor = 'pointer';
+                        img.style.borderRadius = '10px';
+
 
                         // if icon name ends with shrugging_kaomoji.jpg display it in the centre, below the other images.
                         if (icon.endsWith('Shrugging_kaomoji.jpg')) {
                             console.log("shrugging_kaomoji.jpg");
-                           
+                            img.style.height = '25vh';
+                            img.style.width = 'auto';
                             container2.appendChild(img);
                         }
                         else {
