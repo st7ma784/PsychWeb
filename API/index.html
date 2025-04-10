@@ -4,8 +4,8 @@
     <title>Icons Display</title>
     <style>
         .icon {
-            width: 20%;
-            height: 40%;
+            width: 30%;
+            height: 30%;
             margin: 10px;
         }
         #sidebar {
@@ -52,32 +52,28 @@
             text-decoration: underline;
         }
        
-        #participant-id-label {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            font-size: 16px;
-        }
         #participant-id {
-            /* align to bottom of screen next to label */
             position: fixed;
             bottom: 10px;
-            left: 150px;
             font-size: 16px;
-            width: 200px;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            width: 100px;
         }
         #icons-container {
             display: flex;
             flex-wrap: wrap;
+            /* make height at most 50% of screen */
+            max-height: 50vh;
+            width: 100%;
+            /* scale contents to fit */
+            overflow: auto;
+            /* center the icons */
             justify-content: center;
             margin-top: 20px;
             margin-bottom: 20px; /* to make space for the participant id input */
         }
         #KAOMOJI {
             /* position beneath #icons-container */
+
             position: relative;
             display: flex;
             flex-wrap: wrap;
@@ -91,6 +87,15 @@
         const sidebar = document.createElement('div');
         sidebar.id = 'sidebar';
         sidebar.innerHTML = '<h2>Story stages</h2><ul id="folders-list"></ul>';
+        // // add in the form for participant id
+        // const participantIdLabel = document.createElement('label');
+        // participantIdLabel.id = 'participant-id-label';
+        // participantIdLabel.textContent = 'Participant ID: ';
+        const participantIdInput = document.createElement('input');
+        participantIdInput.id = 'participant-id';
+        participantIdInput.type = 'text';
+        participantIdInput.placeholder = 'Enter your ID';
+        sidebar.appendChild(participantIdInput);
         document.body.appendChild(sidebar);
         fetchAddress = '/buttons';
         fetch('/listfolders')
@@ -115,8 +120,7 @@
 <body>
     <div id="icons-container"></div>
     <div id="KAOMOJI"></div>
-    <label id="participant-id-label" for="participant-id">Participant ID:</label>
-    <input type="text" id="participant-id" name="participant-id" value="">
+
     <!-- add an info bobble that appears when the mouse is over it -->
     
     <div id="info-bubble" style="display:none; position:fixed; background-color:white; border:1px solid black; padding:5px;">
@@ -142,14 +146,16 @@
                         img.className = 'icon';
                         img.addEventListener('click', update);
                         console.log(icon);
+                        img.style.margin = '0 auto';
+                        img.style.alignContent = 'center';
+                        img.style.display = 'block';
+                        //make the height and width 40% of the screen
+                        img.style.height = '40vh';
+
                         // if icon name ends with shrugging_kaomoji.jpg display it in the centre, below the other images.
                         if (icon.endsWith('Shrugging_kaomoji.jpg')) {
                             console.log("shrugging_kaomoji.jpg");
-                            img.style.margin = '0 auto';
-                            img.style.alignContent = 'center';
-                            img.style.display = 'block';
-                            img.style.width = '40%';
-                            img.style.height = '40%';
+                           
                             container2.appendChild(img);
                         }
                         else {

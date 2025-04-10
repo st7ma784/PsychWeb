@@ -11,6 +11,9 @@ collection = db['options']
 #read spreadsheet from the xlsx file and create a list of folders
 import pandas as pd
 data_table= pd.read_excel('pictures.xlsx')
+# again 
+data_table['test_name'] = data_table['test_name'].str.replace(" ", "_")
+
 #table will have image columns and a correct answer column
 
 
@@ -43,7 +46,7 @@ def get_data():
         elif correct_answer == "imageB":
             answer= row["rightImage"]
         else: 
-            answer="Shrugging_Kaomoji" ## this isn't working ? 
+            answer="Shrugging_kaomoji" ## this isn't working ? 
         answer=answer.split("/")[-1].split(".")[0]
         if answer==option:
             data['Researcher Agrees']+=1
